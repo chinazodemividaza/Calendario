@@ -51,12 +51,33 @@ class EventosController extends Controller
         $eventos=evento::where("diaInicio",$datosEvento["diaInicio"])->where("idLugar",$datosEvento["idLugar"])->get();
 
         $bandera=0;
+        $horainicio=0;
+        $horafin=0;
+        $horastotales=0;
         
+         $horainicio=$datosEvento["horaInicioInt"];
+            $horafin=$datosEvento["horaFinInt"];
+            $horastotales=$horafin-$horainicio;
+            
+            if ($datosEvento["ilimitado"] == 0) {
+                if ($horastotales>4) {
+                $bandera=4;
+            }
+            }
+
+            if ($datosEvento["horaInicioInt"] >= $datosEvento["horaFinInt"]) {
+                $bandera=1;
+            }
+
+            
+            
+           
         foreach ($eventos as $evento) {
             
+           
             if ($datosEvento["ilimitado"] == 1) {
                 echo "Se cambia por ilimitado";
-                $bandera=1;
+                $bandera=6;
                 }
             
             if ($datosEvento["horaInicioInt"] >= $evento["horaInicioInt"]) {
@@ -86,42 +107,30 @@ class EventosController extends Controller
                     $bandera=1;
               }
             }
-
-            // echo"por cada evento as eventos";
-            // echo $evento;
-            // echo "HOLAHOLAHOLAHOLA";
-
         }
-        // @foreach ($evento as $eventos)
+   
 
-        // <p>id del evento que cumple las condicioens {{ $evento->id }}</p>
-
-        // @endforeach
-        
-        // echo"hola estamos en el lugar que tu quieres";
-        // echo "Para escapar caracteres se hace \"así\".";
-        // echo $eventos;
-
-
-
-
-
-
-
-    //    $idLugar=$datosEvento["color"];
-    // && ambas   
-    // || este o este
-    //     echo $idLugar;
-        // print_r("se puede escribir?");
-        
-        // echo $idLugar;
-        //  
-        // //  
-        //  exit();
          if ($bandera==0) {
             evento::insert($datosEvento);
-            return [$datosEvento];
+            return response()->json([$datosEvento,'bandera'=>0]);
          }
+
+         if ($bandera==0) {
+            return response()->json(['bandera'=>0]);
+                  }
+
+         if ($bandera==4) {
+            return response()->json(['bandera'=>4]);
+         }
+        
+         if ($bandera==6) {
+            return response()->json(['bandera'=>6]);
+         }
+
+         if ($bandera==1) {
+            return response()->json(['bandera'=>1]);
+         }
+
          
         // evento::insert($datosEvento);
         // return [$datosEvento];
@@ -161,13 +170,30 @@ class EventosController extends Controller
     {
         
         $datosEvento=request()->except(['_token','_method']);
-        
+                $bandera=2;
+                $horainicio=0;
+                $horafin=0;
+                $horastotales=0;
+                
+                $horainicio=$datosEvento["horaInicioInt"];
+                $horafin=$datosEvento["horaFinInt"];
+                $horastotales=$horafin-$horainicio;
 
+                if ($datosEvento["ilimitado"] == 0) {
+                    if ($horastotales>4) {
+                    $bandera=4;
+                }
+                }
+                if ($datosEvento["horaInicioInt"] >= $datosEvento["horaFinInt"]) {
+                 $bandera=1;
+                 }
 
                 $eventos=evento::where("diaInicio",$datosEvento["diaInicio"])->where("idLugar",$datosEvento["idLugar"])->get();
 
                 
-                $bandera=0;
+               
+    
+               
                 foreach ($eventos as $evento) {
 
                     
@@ -179,7 +205,7 @@ class EventosController extends Controller
                     
                     if ($datosEvento["ilimitado"] == 1) {
                     echo "Se cambia por ilimitado";
-                    $bandera=1;
+                    $bandera=6;
                     }
                     
                     if ($datosEvento["horaInicioInt"] >= $evento["horaInicioInt"]) {
@@ -231,13 +257,25 @@ class EventosController extends Controller
                 }
 
 
-                if ($bandera==0) {
+                if ($bandera==2) {
                 $respuesta=evento::where('id','=',$id)->update($datosEvento);
-        return response()->json($respuesta);
+                return response()->json([$respuesta,'badera'=>2]);
+                 
+                }
+                 if ($bandera==4) {
+                    return response()->json(['bandera'=>4]);
                  }
-        // $respuesta=evento::where('id','=',$id)->update($datosEvento);
-        // return response()->json($respuesta);
-    }
+                
+                 if ($bandera==6) {
+                    return response()->json(['bandera'=>6]);
+                 }
+        
+                 if ($bandera==1) {
+                    return response()->json(['bandera'=>1]);
+                 }
+                 
+                }
+    
 
     /**
      * Remove the specified resource from storage.
@@ -249,6 +287,6 @@ class EventosController extends Controller
     {
         $eventos=evento::findOrFail($id);
         evento::destroy($id);
-        return response()->json($id);
+        return response()->json([$id,'bandera'=>3]);
     }
 }

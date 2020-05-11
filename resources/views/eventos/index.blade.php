@@ -101,7 +101,9 @@
             // },
 
             dateClick:function(info){
-
+                $('#selectSede').val("");
+                $("#txtHora").prop("disabled", false);
+                $("#txtHoraFin").prop("disabled", false);
                 $("#selectSede").change(function(){ 
                 var ilimitado=0;
                 $(".optionSede").each(function(){
@@ -123,7 +125,13 @@
                 $("#colorin").val(colorsede);
                 
             });
+
+
+
                 $('#txtFecha').val(info.dateStr);
+                $('#btnAgregar').show();
+                $('#btnBorrar').hide();
+                $('#btnModificar').hide();
                 $('#exampleModal').modal();
                 // console.log(info);
                 // calendar.addEvent({title:"Perras",date:info.dateStr});
@@ -170,6 +178,27 @@
                 $('#ilimitadoFlag').val(info.event.extendedProps.ilimitado);
                 $('#txtHoraFinInt').val(info.event.extendedProps.horaFinInt);
                 $('#txtHoraInt').val(info.event.extendedProps.horaInicioInt);
+
+
+                var ilimitado=$('#ilimitadoFlag').val();
+
+                if (ilimitado == 1) {
+                        
+                     
+                        $("#txtHora").prop("disabled", true);
+                        $("#txtHoraFin").prop("disabled", true);
+                        $("#txtHora").val("00:00");
+                        $("#txtHoraFin").val("23:00");
+
+                        
+                    }
+
+                    if(ilimitado==0) {
+                        $("#txtHora").prop("disabled", false);
+                        $("#txtHoraFin").prop("disabled", false);
+                    }
+
+                $('#selectSede').val(info.event.extendedProps.idLugar);
                 
                 // $('#txtHora').val(info.event.extendedProps.horaInicio);
                 
@@ -177,6 +206,9 @@
                 console.log($('#txtHoraFin').val());
                 // $('#txtFecha').val(info.event.extendedProps.diaInicio);
                 var YOYO = $('#txtFecha').val();
+                $('#btnAgregar').hide();
+                $('#btnBorrar').show();
+                $('#btnModificar').show();
                 $('#exampleModal').modal();
               
 
@@ -357,7 +389,7 @@
             $('#start1').val($('#txtFecha').val()+" "+$('#txtHora').val());
             $('#end1').val($('#txtFecha').val()+" "+$('#txtHoraFin').val());   
 
-            var bandera=0;
+            $("#Bandera").val(0);
            
            var valid1="";
            var valid2="";
@@ -371,10 +403,10 @@
            valid1 = parseInt(valid1[0], 10);
            valid2 = parseInt(valid2[0], 10);
 
-           if (valid1 >= valid2) {
-               bandera=1;
+        //    if (valid1 >= valid2) {
+        //     $("#Bandera").val(1);
                 
-           }
+        //    }
         
         var arreglarFormato=$('#txtHora').val();
            arreglarFormato= arreglarFormato.split(":");
@@ -411,20 +443,26 @@
 
             }
             
-
-            if (bandera == 0) {
                 ObjEvento=recolectarDatosGUI("POST");
                 EnviarInformacion('',ObjEvento);
-                    $("#Exito").fadeTo(5000, 500).slideUp(500, function(){
-                    $("#Exito").alert('close');})
-                }
-            if (bandera == 1) {
-                $("#ProblemaHorasModal").fadeTo(5000, 500).slideUp(500, function(){$("#ProblemaHorasModal").alert('close');})
-
                 $('#exampleModal').modal('toggle');
 
+            // if ($("#Bandera").val() == 0) {
+                
+            //     console.log($("#Bandera").val());
+            
+            //     }
+            //         if ($("#Bandera").val() == 0) {
+            //         $("#Exito").fadeTo(5000, 500).slideUp(500, function(){
+            //         $("#Exito").alert('hidde');})
+            //     }
+            // if ($("#Bandera").val() == 1) {
+            //     $("#ProblemaHorasModal").fadeTo(5000, 500).slideUp(500, function(){$("#ProblemaHorasModal").alert('hidde');})
 
-            }
+                
+
+
+            // }
 
 
             
@@ -438,8 +476,8 @@
 
             EnviarInformacion('/'+$('#txtID').val(),ObjEvento);
             LimpiarModal();
-            $("#ExitoBorrar").fadeTo(3000, 500).slideUp(500, function(){
-            $("#ExitoBorrar").alert('close');})
+            // $("#ExitoBorrar").fadeTo(3000, 500).slideUp(500, function(){
+            // $("#ExitoBorrar").alert('hidde');})
 
         });
 
@@ -452,7 +490,7 @@
 
             $('#start1').val($('#txtFecha').val()+" "+$('#txtHora').val());
             $('#end1').val($('#txtFecha').val()+" "+$('#txtHoraFin').val());
-           var bandera=0;
+            $("#Bandera").val(0);
 
                 var valid1="";
                 var valid2="";
@@ -467,12 +505,12 @@
                 valid2 = parseInt(valid2[0], 10);
 
                 if (valid1 >= valid2) {
-                    bandera=1;                    
+                    $("#Bandera").val(1);                    
                 }
 
 
                 if (valid1 < valid2) {
-                    bandera=0;
+                    $("#Bandera").val(0);
                 }
 
 
@@ -527,21 +565,20 @@
                                     }
             });  
         }  
-                if (bandera == 1) {
-                $("#ProblemaHorasModal").fadeTo(5000, 500).slideUp(500, function(){$("#ProblemaHorasModal").alert('close');})
-                $('#exampleModal').modal('toggle');
+                // if ($("#Bandera").val() == 1) {
+                // $("#ProblemaHorasModal").fadeTo(5000, 500).slideUp(500, function(){$("#ProblemaHorasModal").alert('hidde');})
+                // $('#exampleModal').modal('toggle');
 
 
-                }
+                // }
 
 
-                if (bandera == 0) {
-                    ObjEvento=recolectarDatosGUI("PATCH");
-                    EnviarInformacion('/'+$('#txtID').val(),ObjEvento);
-                    $("#ExitoModificar").fadeTo(5000, 500).slideUp(500, function(){$("#ExitoModificar").alert('close');})
-                    
-                }
-            
+                // if ($("#Bandera").val() == 0) {
+                //     $("#ExitoModificar").fadeTo(5000, 500).slideUp(500, function(){$("#ExitoModificar").alert('hidde');})
+                // }
+
+             ObjEvento=recolectarDatosGUI("PATCH");
+            EnviarInformacion('/'+$('#txtID').val(),ObjEvento);
             LimpiarModal();
 
         });
@@ -670,10 +707,58 @@
                         $('#exampleModal').modal('toggle');
                         }
                         calendar.refetchEvents();
+
+                            console.log(msg.bandera)
+
+                        if (msg.bandera==4) {
+                            //Eventos tienen un maximo de 4 horas
+                            $("#MASDE4").fadeTo(3000, 500).slideUp(500, function(){
+                            $("#MASDE4").alert('hidde');});
+
+                        }
+
+                        if (msg.bandera==1) {
+                            //Horario ocupado o inposible
+                            $("#ProblemaHorasModal").fadeTo(5000, 500).slideUp(500, function(){
+                                $("#ProblemaHorasModal").alert('hidde');});
+                        }
+
+                        if (msg.bandera==6) {
+                            //Solo un evento ilimitado por dia
+                            $("#ProblemaIlimitado").fadeTo(5000, 500).slideUp(500, function(){
+                                $("#ProblemaIlimitado").alert('hidde');});
+                        }
+
+                        if (msg.bandera==0) {
+                            //Guardado de forma correcta
+                            $("#Exito").fadeTo(5000, 500).slideUp(500, function(){
+                            $("#Exito").alert('hidde');});
+                        }
+
+                        if (msg.bandera==2) {
+                            //Guardado de forma correcta
+                            $("#ExitoModificar").fadeTo(5000, 500).slideUp(500, function(){
+                            $("#ExitoModificar").alert('hidde');
+                            });
+                        }
+
+                        if (msg.bandera==3) {
+                            //Guardado de forma correcta
+                            $("#ExitoBorrar").fadeTo(5000, 500).slideUp(500, function(){
+                            $("#ExitoBorrar").alert('hidde');
+                            });
+                        }
+
+
+
+
                     },
+
+
                     error:function(){alert("Problemas");}
                 }
             );
+            
         }
 
   
@@ -719,6 +804,16 @@
                     <span>&times;</span>
                     </button> Las Horas Seleccionadas No Son Compatibles </div>
 
+                    <div class="alert alert-danger collapse" id="ProblemaIlimitado" > <button class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                    </button> Solo Se Permite Un Evento Al Dia En Este Lugar </div>
+
+                    
+
+                    <div class="alert alert-danger collapse" id="MASDE4" > <button class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                    </button> Los Eventos No Pueden Durar Mas De 4 Horas </div>
+
                     <div class="alert alert-info hidden collapse"  id="ExitoBorrar">
                     <button class="close" data-dismiss="alert">
                     <span>&times;</span>
@@ -728,7 +823,7 @@
                     <div class="alert alert-success hidden collapse"  id="ExitoModificar">
                     <button class="close" data-dismiss="alert">
                     <span>&times;</span>
-                    </button> Modificado
+                    </button> Modificado Correctamente
                     </div>
 
                     
@@ -749,56 +844,49 @@
             <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Datos del Evento</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
-                </button>
+                </button> -->
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-form-label col-md">Titulo:</label>
+                    <input type="text" name="txtTitulo" id="txtTitulo" class="col-md form-control form-control-sm">
+                    <div class="form-group">
+                        <label class="col-form-label col-md">Lugar:</label>
+                   
+                        <select name="selectSede" id="selectSede" class="col-md form-control form-control-sm">
+                        <option hidden selected value=""> selecciona un lugar</option>
+                        @foreach( $sedes as $sede ) 
+                            <option  class="optionSede" data-color="{{$sede->color}}" data-ilimitado="{{$sede->ilimitado}}" value="{{ $sede->id }}" > {{ $sede->name }} </option>
+                        @endforeach
+                        </select>
+                    </div>
                 
-                <!-- <h4>Fecha:</h4> -->
+                <div class="form-group">
+                    <div class="row">  
+                
+                        <div class="clockpicker form-group col-md-6" data-autoclose="true">
+                          <label class="col-form-label ">Hora Inicio:</label>
+                            <input type="text" name="txtHora" id="txtHora" class="form-control form-control-sm col-md-5">
+                        </div>
 
-                    <script type="text/javascript">
-                    // document.write($("#txtFecha").val());
-                    </script> 
-                
-                <input type="hidden" id="txtID">
-                <br/><br/><br/><div class="row">
-                <h4 class="col-md-4">Titulo:</h4>
-                <input type="text" name="txtTitulo" id="txtTitulo" class="col-md-4">
-                <br/>
-                <br/>
-                
-                <div class="col-md-6">
-                <h4 class="col-md-4">Lugar:</h4>
-                <select name="selectSede" id="selectSede" class="form-control" class="col-md-6">
-                <option hidden selected> selecciona un lugar</option>
-                @foreach( $sedes as $sede ) 
-                    <option  class="optionSede" data-color="{{$sede->color}}" data-ilimitado="{{$sede->ilimitado}}" value="{{ $sede->id }}" > {{ $sede->name }} </option>
-                @endforeach
-
-                </select>
-                
+                        <div class="clockpicker2 form-group col-md-6" data-autoclose="true"> 
+                             <label class="col-form-label ">Hora Fin:</label>
+                            <input type="text" name="txtHoraFin" id="txtHoraFin" class="form-control form-control-sm col-md-5">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">                
-                </div>
-              
-                 <div class="input-group clockpicker" data-autoclose="true">
-                 <h4 class="col-md-4">Hora Inicio:</h4>
-               <input type="text" name="txtHora" id="txtHora">
-               </div>
                
-                <div class="input-group clockpicker2" data-autoclose="true"> 
-                <h4 class="col-md-4">Hora Fin:</h4> 
-                <input type="text" name="txtHoraFin" id="txtHoraFin">
+                <div class="form-group">
+                    <label class="col-form-label col-md">Descripcion:</label>
+                <textarea name="txtDescripcion" id="txtDescripcion" class="col-md form-control form-control-sm"></textarea>
                 </div>
-                
-                <br/>
-                <h4 class="col-md-4">Descripcion:</h4>
-                <textarea name="txtDescripcion" id="txtDescripcion" cols="30" rows="10"></textarea>
-                <br/>
+
+
                 <input type="hidden"name="txtColor" id="txtColor">
-               
-               
+                <input type="hidden" id="txtID">
                 <input type="hidden" name="txtFecha" id="txtFecha">
                 <input type="hidden" name="idSede" id="idSede">
                 <input type="hidden" name="ilimitadoFlag" id="ilimitadoFlag">
@@ -808,20 +896,22 @@
                 <input type="hidden" name="txtHoraInt" id="txtHoraInt">
                 <input type="hidden" name="txtHoraFinInt" id="txtHoraFinInt">
                 <input type="hidden" name="SumHrs" id="SumHrs">
+                <input type="hidden" name="Bandera" id="Bandera">
+                
                 <!-- Color:
                 <input type="color" name="txtColor" id="txtColor">
                 <br/> -->
             </div>
             </div>
-            <div class="modal-footer">
 
-            <button id="btnAgregar" class="btn btn-primary" >Agregar</button>
-            <button id="btnModificar" class="btn btn-success">Modificar</button>
-            <button id="btnBorrar" class="btn btn-danger">Borrar</button>
-            <button id="btnCancelar" class="btn btn-warning"> Cancelar</button>
-            
+            <div class="modal-footer">
+                <button id="btnAgregar" class="btn btn-primary" >Agregar</button>
+                <button id="btnModificar" class="btn btn-success">Modificar</button>
+                <button id="btnBorrar" class="btn btn-danger">Borrar</button>
+                <button id="btnCancelar" class="btn btn-warning"  data-dismiss="modal" aria-label="Close"> Cancelar</button>
             </div>
-            </div>
+
+        </div>
         </div>
         </div>
 
